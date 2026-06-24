@@ -1,0 +1,10 @@
+name = "web-personal-blog"
+main = "src/main.py"
+compatibility_date = "2026-06-23"
+compatibility_flags = ["python_workers"]
+
+[vars]
+API_BASE = "https://api.javierfuenzam.com"
+
+# Route on the blog subdomain (zone must exist in Cloudflare).
+# routes = [ { pattern = "blog.javierfuenzam.com", custom_domain = true } ]
