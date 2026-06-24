@@ -101,12 +101,17 @@ _404 = """{% extends "base.html" %}
 {% block content %}<p>Esta entrada no existe o no esta publicada.</p>{% endblock %}
 """
 
+_MESSAGE = """{% extends "base.html" %}
+{% block content %}<p>{{ message }}</p>{% endblock %}
+"""
+
 _env = Environment(
     loader=DictLoader({
         "base.html": _BASE,
         "list.html": _LIST,
         "post.html": _POST,
         "404.html": _404,
+        "message.html": _MESSAGE,
     }),
     autoescape=select_autoescape(["html", "xml"]),
 )
@@ -124,3 +129,7 @@ def render_post(post, body_html, description, url):
 
 def render_404():
     return _env.get_template("404.html").render()
+
+
+def render_message(message):
+    return _env.get_template("message.html").render(message=message)

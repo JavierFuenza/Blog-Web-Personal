@@ -44,3 +44,8 @@ def test_render_post_escapes_title_in_meta():
 def test_render_404_has_message():
     html = views.render_404()
     assert "no existe" in html.lower()
+
+
+def test_render_message_shows_text():
+    html = views.render_message("No se pudieron cargar las entradas.")
+    assert "No se pudieron cargar las entradas." in html

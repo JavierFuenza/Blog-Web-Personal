@@ -31,3 +31,9 @@ def test_build_rss_escapes_titles():
     xml = feed.build_rss(POSTS, "https://blog.javierfuenzam.com")
     assert "Hola &amp; Mundo" in xml
     assert "Hola & Mundo" not in xml
+
+
+def test_build_rss_omits_pubdate_when_missing():
+    posts = [{"slug": "x", "title": "X", "published_at": None, "excerpt": ""}]
+    xml = feed.build_rss(posts, "https://blog.javierfuenzam.com")
+    assert "<pubDate>" not in xml

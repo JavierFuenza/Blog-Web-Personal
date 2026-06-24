@@ -22,3 +22,18 @@ def test_make_excerpt_truncates_and_strips_newlines():
 
 def test_make_excerpt_empty():
     assert render.make_excerpt("") == ""
+
+
+def test_excerpt_from_markdown_strips_syntax():
+    out = render.excerpt_from_markdown(
+        "## Hola\n\nun texto **fuerte** y un [link](http://ej.com)")
+    assert "#" not in out
+    assert "*" not in out
+    assert "http://ej.com" not in out   # link target dropped, text kept
+    assert "Hola" in out
+    assert "fuerte" in out
+    assert "link" in out
+
+
+def test_excerpt_from_markdown_empty():
+    assert render.excerpt_from_markdown("") == ""

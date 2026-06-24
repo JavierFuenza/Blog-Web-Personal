@@ -14,12 +14,14 @@ def _rfc822(iso):
 
 def _item(post, site_url):
     link = f"{site_url}/{post['slug']}"
+    pub = _rfc822(post.get("published_at"))
+    pubdate = f"<pubDate>{escape(pub)}</pubDate>" if pub else ""
     return (
         "<item>"
         f"<title>{escape(post.get('title') or '')}</title>"
         f"<link>{escape(link)}</link>"
         f"<guid>{escape(link)}</guid>"
-        f"<pubDate>{escape(_rfc822(post.get('published_at')))}</pubDate>"
+        f"{pubdate}"
         f"<description>{escape(post.get('excerpt') or '')}</description>"
         "</item>"
     )
