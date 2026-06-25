@@ -1,4 +1,4 @@
-name = "web-personal-blog"
+name = "blog-web-personal"
 main = "src/main.py"
 compatibility_date = "2026-06-23"
 compatibility_flags = ["python_workers"]
