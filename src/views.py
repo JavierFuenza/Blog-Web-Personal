@@ -4,7 +4,28 @@ Reuses the site's visual tokens (black/azure/gainsboro, #page-wrapper frame,
 #lang-switch, back-link header) but tuned for long-form reading.
 """
 
+from datetime import datetime
+
 from jinja2 import Environment, DictLoader, select_autoescape
+
+_MESES = [
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+]
+
+
+def format_es(iso):
+    """ISO 8601 -> '1 de junio de 2026'. '' si falta o es invalida.
+
+    Sin locale (no garantizado en Pyodide): nombres de mes embebidos.
+    """
+    if not iso:
+        return ""
+    try:
+        dt = datetime.fromisoformat(iso)
+    except (ValueError, TypeError):
+        return ""
+    return f"{dt.day} de {_MESES[dt.month - 1]} de {dt.year}"
 
 _CSS = """
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,7 +86,7 @@ _LIST = """{% extends "base.html" %}
   {% for p in items %}
   <li>
     <a href="/{{ p.slug }}">{{ p.title or "Sin titulo" }}</a>
-    <div class="post-meta">{{ p.published_at }}</div>
+    {% if p.published_at %}<div class="post-meta">{{ p.published_at | fmt_date }}</div>{% endif %}
     {% if p.excerpt %}<div class="excerpt">{{ p.excerpt }}</div>{% endif %}
   </li>
   {% endfor %}
@@ -91,7 +112,7 @@ _POST = """{% extends "base.html" %}
 {% block content %}
 <article>
   <h1>{{ post.title or "Sin titulo" }}</h1>
-  <div class="post-meta">{{ post.published_at }}</div>
+  {% if post.published_at %}<div class="post-meta">{{ post.published_at | fmt_date }}</div>{% endif %}
   <div class="post-body">{{ body_html | safe }}</div>
 </article>
 {% endblock %}
@@ -115,6 +136,7 @@ _env = Environment(
     }),
     autoescape=select_autoescape(["html", "xml"]),
 )
+_env.filters["fmt_date"] = format_es
 
 
 def render_list(items, page, has_prev, has_next):
